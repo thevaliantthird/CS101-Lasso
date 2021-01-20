@@ -87,6 +87,9 @@ void LevelUp(int n, XEvent &E){
       while(true){
         if(checkEvent(E))break;
       }
+      while(true){
+        if(checkEvent(E))break;
+      }
       T.hide();
       T1.hide();
       T2.hide();
@@ -95,7 +98,7 @@ void LevelUp(int n, XEvent &E){
       T6.hide();
       T7.hide();
       c.hide();
-      CoinRequirement = 15;
+      CoinRequirement = 20;
       break;}
     case 3:
       {Text t0(WINDOW_X/2+100,WINDOW_Y/2-300,"LEVEL UP! Welcome to Level 3!");
@@ -115,6 +118,9 @@ void LevelUp(int n, XEvent &E){
       while(true){
         if(checkEvent(E))break;
       }
+      while(true){
+        if(checkEvent(E))break;
+      }
       t0.hide();
       t01.hide();
       t02.hide();
@@ -123,7 +129,7 @@ void LevelUp(int n, XEvent &E){
       t05.hide();
       t06.hide();
       c1.hide();
-      CoinRequirement = 20;
+      CoinRequirement = 25;
       break;}
     case 4:
       {Text t(WINDOW_X/2+100,WINDOW_Y/2-300,"LEVEL UP! Welcome to Level 4!");
@@ -143,6 +149,9 @@ void LevelUp(int n, XEvent &E){
       while(true){
         if(checkEvent(E))break;
       }
+      while(true){
+        if(checkEvent(E))break;
+      }
       t.hide();
       t1.hide();
       t2.hide();
@@ -152,7 +161,7 @@ void LevelUp(int n, XEvent &E){
       t6.hide();
       t7.hide();
       c2.hide();
-      CoinRequirement = 20;
+      CoinRequirement = 30;
       break;}
     case 5:
     {Text T0(WINDOW_X/2+100,WINDOW_Y/2-300,"LEVEL UP! Welcome to Level 5!");
@@ -176,6 +185,9 @@ void LevelUp(int n, XEvent &E){
     while(true){
       if(checkEvent(E))break;
     }
+    while(true){
+      if(checkEvent(E))break;
+    }
     T0.hide();
     T01.hide();
     T02.hide();
@@ -187,7 +199,7 @@ void LevelUp(int n, XEvent &E){
     T08.hide();
     C3.hide();
     C2.hide();
-    CoinRequirement = 20;
+    CoinRequirement = 30;
       break;}
     case 6:
       {Text t11(WINDOW_X/2+100,WINDOW_Y/2-300,"Congratulations!"+Player+", You've Completed the Game!");
@@ -203,6 +215,38 @@ void LevelUp(int n, XEvent &E){
   }
 }
 
+bool Feasible(int type){
+  switch(type){
+    case 0:
+      return true;
+      break;
+    case 1:
+      return CoinCount[1]<2;
+      break;
+    case 2:
+      return CoinCount[2] + CoinCount[3]<1;
+      break;
+    case 3:
+      return CoinCount[3]+CoinCount[2]<1;
+      break;
+    case 4:
+      return CoinCount[4]+CoinCount[5]<1;
+      break;
+    case 5:
+      return CoinCount[4]+CoinCount[5]<1;
+      break;
+    case 6:
+      return CoinCount[6]<1;
+      break;
+    case 7:
+      return CoinCount[7]<2;
+      break;
+    default:
+      return true;
+      break;
+  }
+}
+
 
 void GameOver(Lasso &L, vector<Coin*> &coins, XEvent &E){
   L.hideObject();
@@ -215,6 +259,9 @@ void GameOver(Lasso &L, vector<Coin*> &coins, XEvent &E){
   t1.setScale(3);
   getClick();
   Text t3(WINDOW_X/2+100,WINDOW_Y/2-200,"Press any key to continue!");
+  while(true){
+    if(checkEvent(E))break;
+  }
   while(true){
     if(checkEvent(E))break;
   }
@@ -263,7 +310,7 @@ main_program {
   cin>>Player;
   Scores.clear();
   CumulativeScore = 0;
-  CoinRequirement = 10;
+  CoinRequirement = 15;
   initCanvas("Lasso", WINDOW_X, WINDOW_Y);
   int stepCount = 0;
   double stepTime = STEP_TIME;
@@ -411,41 +458,44 @@ main_program {
     if(stepCount%CoinTP==0){
       ToReleaseCoins.push(0);
     }
-    if(stepCount%BombTP==0 && level >=2 && CoinCount[1]<2){
+    if(stepCount%BombTP==0 && level >=2){
       ToReleaseCoins.push(1);
     }
-    if(stepCount%MagnetTP==0 && level >= 3 && (CoinCount[2]+CoinCount[3])<1){
+    if(stepCount%MagnetTP==0 && level >= 3){
       ToReleaseCoins.push((rand()%2)+2);
     }
-    if(stepCount%SpeedTP==0 && level >= 4 && (CoinCount[4]+CoinCount[5])<1){
+    if(stepCount%SpeedTP==0 && level >= 4){
       ToReleaseCoins.push((rand()%2)+4);
     }
-    if(stepCount%LiveTP==0 && level==5 && CoinCount[6]<1){
+    if(stepCount%LiveTP==0 && level==5 ){
       ToReleaseCoins.push(6);
     }
-    if(stepCount%CompulsionTP==0 && level==5 && CoinCount[7]<2){
+    if(stepCount%CompulsionTP==0 && level==5){
       ToReleaseCoins.push(7);
     }
 
     if(ToReleaseCoins.size()>0 && coinRadar.size()<7){
       int y = ToReleaseCoins.front();
-      ToReleaseCoins.pop();
-      CoinCount[y]++;
-      Coin *newCoin = new Coin(coin_speed, coin_angle_deg, coin_ax, coin_ay, false, rtheta);
-      newCoin->initType(y);
-      if(y==0){
-        newCoin->initTrajectory(rand()%4,levelTime);
-      }else if(y==1){
-        newCoin->initTrajectory(2,levelTime);
-      }else if(y==7){
-        int l = rand()%3;
-        if(l==2)l = 3;
-        newCoin->initTrajectory(l,levelTime);
-      }else{
-        newCoin->initTrajectory((rand()%2)*2+1,levelTime);
-      }
 
-      coinRadar.push_back(newCoin);
+      ToReleaseCoins.pop();
+      if(Feasible(y)){
+        CoinCount[y]++;
+        Coin *newCoin = new Coin(coin_speed, coin_angle_deg, coin_ax, coin_ay, false, rtheta);
+        newCoin->initType(y);
+        if(y==0){
+          newCoin->initTrajectory(rand()%4,levelTime);
+        }else if(y==1){
+          newCoin->initTrajectory((rand()%2)*2,levelTime);
+        }else if(y==7){
+          int l = rand()%3;
+          if(l==2)l = 3;
+          newCoin->initTrajectory(l,levelTime);
+        }else{
+          newCoin->initTrajectory((rand()%2)*2+1,levelTime);
+        }
+
+        coinRadar.push_back(newCoin);
+      }
     }
     if(speedup){
       lasso.set_vx(lasso.get_vx()*2);
@@ -585,6 +635,10 @@ main_program {
         LivesLabel.show();
       }
       LevelUp(++level,e);
+      speedup = false;
+      slowdown = false;
+      attract = false;
+      repel = false;
       if(level>=3){
         MagnetTime.show();
       }
@@ -610,8 +664,8 @@ main_program {
     stepCount++;
     currTime += stepTime;
     levelTime+=stepTime;
-
-    wait(0.5*((double)stepTime));
+    if(leve==1)wait(0.25*(stepTime));
+    else wait(0.1*(stepTime));
     if(endgame)break;
   } // End for(;;)
 
