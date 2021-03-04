@@ -7,6 +7,7 @@
 
 
 class Coin : public MovingObject {
+  //Coin Info
   double coin_start_x;
   double coin_start_y;
   double release_speed;
@@ -14,7 +15,8 @@ class Coin : public MovingObject {
   double coin_ax;
   double coin_ay;
   int trajectory;    // 0 for Straightline, 1 for parabolic, 2 for elliptical, 3 for sinusoidal
-  double dir_x,dir_y;     //The components of a unit vector of the Line(in case of Straightline), of the axis in case of other conics
+  //The components of a unit vector of the Line(in case of Straightline), of the axis in case of other conics
+  double dir_x,dir_y;
   int type;
   /*0 for normal coin, 1 for Bomb, 2 for Magnet that repels Bombs and attracts coin
   3 for magnets which attracts bomb and repels magnet, but there's no way to know
@@ -30,7 +32,7 @@ class Coin : public MovingObject {
 
 
   */
-  float createTime;
+  float createTime;         //the time when the coin is created
   double VX,VY,AX,AY;     // We will first model everything in 2D with aces along the Co-ordinate axes and then project it to another direction
   double X,Y;       //The Co-ordinates considering motion along axes only
 
@@ -77,14 +79,13 @@ class Coin : public MovingObject {
     coin_ay = argay;
     initCoin();
   }
-  void initType(int Type);
-  void initTrajectory(int typ, double creationTime);
-  void runTrajectory(double time);
-  void initCoin();
-  void resetCoin();
-  void endCoin();
-  int getType(){return type;}
-  int getTrajectory(){return trajectory;}
+  void initType(int Type);        //Initializing the type, i.e. making its shape at the initial position
+  void initTrajectory(int typ, double creationTime);  //Initializing the coin's trajectory
+  void runTrajectory(double time);    //Running the trajectory, changing velocities after every step
+  void initCoin();    //For initializing coin
+  void resetCoin();   //For Reseting the Coin
+  int getType(){return type;}   //Return the type of a coin
+  int getTrajectory(){return trajectory;}     //Return the trajectory of the coin
 
 }; // End class Coin
 

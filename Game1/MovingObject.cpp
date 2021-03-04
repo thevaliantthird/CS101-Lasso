@@ -3,25 +3,24 @@
 
 using namespace simplecpp;
 
+//Hide All Parts
 void MovingObject::hideObject(){
   for(size_t i= 0;i<parts.size();i++){
     parts[i]->hide();
   }
 }
 
+//Show all parts
 void MovingObject::ShowObject(){
   for(size_t i = 0;i<parts.size();i++){
     parts[i]->show();
   }
 }
 
-//whatis is 1 for lasso and 0 for coins
+/*whatis is true for lasso(lasso movement, everything happens here)
+and false for coins(as their velocities are defined by the runTrajectory function)*/
 void MovingObject::nextStep(double t, bool whatis) {
   if(paused) { return; }
-  //cerr << "x=" << getXPos() << ",y=" << getYPos() << endl;
-  //cerr << "vx=" << vx << ",vy=" << vy << endl;
-  //cerr << "ax=" << ax << ",ay=" << ay << endl;
-
   for(size_t i=0; i<parts.size(); i++){
     parts[i]->move(vx*t, vy*t);
   }
@@ -31,14 +30,15 @@ void MovingObject::nextStep(double t, bool whatis) {
   }
 } // End MovingObject::nextStep()
 
-double MovingObject::getXPos() {
+double MovingObject::getXPos() {      //Getting the X-co-ordinate
   return (parts.size() > 0) ? parts[0]->getX() : -1;
 }
 
-double MovingObject::getYPos() {
+double MovingObject::getYPos() {      //Getting the Y-co-ordinate
   return (parts.size() > 0) ? parts[0]->getY() : -1;
 }
 
+//To reset any MovingObject
 void MovingObject::reset_all(double argx, double argy, double speed, double angle_deg, double argax, double argay, bool argpaused, bool rtheta) {
   for(size_t i=0; i<parts.size(); i++){
     parts[i]->moveTo(argx, argy);
@@ -49,6 +49,7 @@ void MovingObject::reset_all(double argx, double argy, double speed, double angl
   vx = argvx; vy = argvy; ax = argax; ay = argay; paused = argpaused;
 } // End MovingObject::reset_all()
 
+//Get some MovingObject attached to someother MovingObject
 void MovingObject::getAttachedTo(MovingObject *m) {
   double xpos = m->getXPos();
   double ypos = m->getYPos();
